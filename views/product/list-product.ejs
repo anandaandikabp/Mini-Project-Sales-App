@@ -1,0 +1,59 @@
+
+    <div class="row">
+        <div class="col">
+            <div class="jumbotron">
+                <h1 class="display-4">Halaman Product</h1>
+                <hr class="my-4">
+            </div>
+            <div class="col">
+                <% if (msg.length !== 0) { %>
+                    <div class="alert alert-success" role="alert">
+                        <%= msg %> 
+                      </div>
+                <% } %>
+                <% if (msg2.length !== 0) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <%= msg2 %> 
+                      </div>
+                <% } %>               
+                
+                <a class="btn btn-success btn-lg float-end" href="/product/add-product" role="button"><i class="bi bi-file-earmark-plus-fill"></i> Tambah Product</a>
+                <br>                
+                <h2>Product List</h2>
+                <!-- menampilkan data dari app -->
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Part Id</th>
+                            <th scope="col">Brand</th>
+                            <th scope="col">Part For</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (product.length>= 1) { %>
+                            <% product.forEach((product, i)=> { i++ %>
+                                <tr>
+                                    <th scope="row">
+                                        <%= product.part_id %>
+                                    </th>
+                                    <td>
+                                        <%= product.brand %>
+                                    </td>
+                                    <td>
+                                        <%= product.part_for %>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary badge" href="/product/detail-product/<%= product.part_id %> "
+                                            role="button">Detail</a>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                                    <% } else { %>
+                                        <p>data tidak ditemukan</p>
+                                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

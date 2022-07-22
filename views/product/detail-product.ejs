@@ -1,0 +1,30 @@
+
+    <div class="row m-3 p-3">
+        <div class="col-md-4">
+            <div class="col">
+                <div class="card m-3" style="width: 18rem;">
+                    <img src="/img/<%= product.image %>" alt="ava">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="jumbotron">
+                <h1 class="display-4">Brand Name: <%= product.brand %></h1>
+                <hr class="my-4">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Part ID : <%= product.part_id %>
+                    </h5>
+                    <h5 class="card-title">
+                        Part For : <%= product.part_for %>
+                    </h5>
+                    <p class="card-text">
+                        Price List: <%= product.price %>
+                    </p>
+                    <a href="/product/edit/<%= product.part_id %>" class="btn btn-warning">Edit</a>
+                    <a href="/product/delete/<%= product.part_id %>" class="btn btn-danger" onclick="return confirm('Yakin?')">Hapus</a>
+                    <a class="btn btn-primary" href="/product/list-product" role="button">Kembali</a>
+                </div>
+            </div>
+        </div>
+    </div>

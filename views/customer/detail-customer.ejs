@@ -1,0 +1,23 @@
+
+    <div class="row m-3 p-3">
+        <div class="col-md-8">
+            <div class="jumbotron">
+                <h1 class="display-4">Customer Name: <%= customer.name %></h1>
+                <hr class="my-4">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        Customer ID : <%= customer.cus_id %>
+                    </h3>
+                    <p class="card-body">
+                        Customer Address : <%= customer.address %>
+                    </p>
+                    <p class="card-body">
+                        Customer Phone Number : <%= customer.mobile %>
+                    </p>
+                    <a href="/customer/edit/<%= customer.cus_id %>" class="btn btn-warning">Edit</a>
+                    <a href="/customer/delete/<%= customer.cus_id %>" class="btn btn-danger" onclick="return confirm('Yakin?')">Hapus</a>
+                    <a class="btn btn-primary" href="/customer/list-customer" role="button">Kembali</a>
+                </div>
+            </div>
+        </div>
+    </div>

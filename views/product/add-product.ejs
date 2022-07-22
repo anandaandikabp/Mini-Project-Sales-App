@@ -1,0 +1,68 @@
+
+  <div class="row m-3 p-3">
+    <div class="col">
+      <% if (typeof errors !='undefined' ) { %>
+        <div class="alert alert-danger" role="alert">
+          <ul>
+            <% errors.forEach(error=> { %>
+              <li>
+                <%= error.msg %>
+              </li>
+              <% }) %>
+          </ul>
+        </div>
+        <% } %>
+          <form method="post" action="/product" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="part_id" class="form-label">Part ID</label>
+              <input type="number" class="form-control" id="part_id" name="part_id" required />
+            </div>
+            <div class="mb-3">
+              <label for="brand" class="form-label">Brand</label>
+              <select class="form-select" id="brand" name="brand" aria-label="Nama Brand" required>
+                <option selected>Pilih Nama Brand</option>
+                <option value="Aspira">Aspira</option>
+                <option value="Astra Autopart">Astra Autopart</option>
+                <option value="555">555</option>
+                <option value="Bosch">Bosch</option>
+                <option value="Indomobil Part">Indomobil Part</option>
+                <option value="Heiker">Heiker</option>
+                <option value="Kramatayuda Part">Kramatayuda Part</option>
+                <option value="Denso">Denso</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="part_for" class="form-label">Part For</label>
+              <!-- <input type="text" class="form-control" id="part_for" name="part_for" required /> -->
+              <select class="form-select" id="part_for" name="part_for" aria-label="Kategori Part" required>
+                <option selected>Pilih Kategori Part</option>
+                <option value="Koil">Koil</option>
+                <option value="Busi">Busi</option>
+                <option value="Camshaft">Camshaft</option>
+                <option value="Karbuartor">Karbuartor</option>
+                <option value="Booster Rem">Booster Rem</option>
+                <option value="Tie Rod">Tie Rod</option>
+                <option value="Link Stabilizer">Link Stabilizer</option>
+                <option value="Bushing Arm">Bushing Arm</option>
+                <option value="Bushing Stabilizer">Bushing Stabilizer</option>
+                <option value="Kampas Rem">Kampas Rem</option>
+                <option value="Klaher Roda">Klaher Roda</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="price" class="form-label">Price</label>
+              <div class="input-group mb-3">
+                <span class="input-group-text">Rp.</span>
+                <input type="number" class="form-control" step="0.01" id="price" name="price" required />
+              </div>
+            </div>    
+            <div class="mb-3">
+              <label for="image" class="form-label">Upload</label>
+              <input type="file" class="form-control" id="image" name="image">              
+            </div>        
+            <button type="submit" class="btn btn-success">Tambah Data</button>
+            <a class="btn btn-primary" href="/product/list-product" role="button">Kembali</a>
+          </form>
+
+    </div>
+  </div>
