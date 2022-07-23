@@ -31,6 +31,8 @@ const detailProduct = async (req, res) => {
         console.log(product.brand);
         console.log(product.part_for);
         console.log(product.price);
+        console.log(product.image);
+        console.log(product.stock);
         res.render('product/detail-product', {
             title: 'Laman Detail',
             layout: 'layout/main-layout',
@@ -51,11 +53,11 @@ const addProduct = async (req, res) => {
             errors: errors.array(),
         })
     } else {
-        const { part_id, brand, part_for, price } = req.body 
+        const { brand, part_for, price, stock } = req.body 
         const img = req.files[0].filename
         await pool.query(`INSERT INTO part(
-	    part_id, brand, part_for, price, image)
-	    VALUES ('${part_id}', '${brand}', '${part_for}', '${price}', '${img}');`)
+	    brand, part_for, price, image, stock)
+	    VALUES ('${brand}', '${part_for}', '${price}', '${img}', '${stock}');`)
         req.flash('msg', 'Data berhasil ditambahkan!')
         res.redirect('/product/list-product')
         console.log(errors)
@@ -75,9 +77,10 @@ const editProduct = async (req, res) => {
 
 // update produk yang dicari
 const updateProduct = async (req, res) => {
-    const { part_id, brand, part_for, price } = req.body
+    const errors = validationResult(req);
+    console.log(errors); 
+    const { part_id, brand, part_for, price, stock } = req.body
     if (!errors.isEmpty()) {
-
         res.render('product/edit-product', {
             title: 'Edit Product',
             layout: 'layout/main-layout',
@@ -87,8 +90,8 @@ const updateProduct = async (req, res) => {
     } else {
         console.log(req.body);
         // updateContact(req.body)
-        await pool.query(`UPDATE public.part
-        SET brand='${brand}', part_for='${part_for}', price=${price}
+        await pool.query(`UPDATE part
+        SET brand='${brand}', part_for='${part_for}', price=${price}, stock=${stock}
         WHERE part_id=${part_id}`)
         req.flash('msg', 'Data berhasil diupdate!')
         res.redirect('/product/list-product')

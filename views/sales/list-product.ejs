@@ -1,0 +1,59 @@
+<form action="/sales/cart-product/<%= product.part_id %>" method="get" id="part_id" name="part_id">
+    <div class="row">
+        <div class="col">
+            <div class="jumbotron">
+
+                <a class="btn btn-success btn-lg float-end mt-4" onclick="document.getElementById('part_id').submit()"
+                    role="button"><i class="bi bi-bag-check-fill"></i> Checkout
+                    Product</a>
+
+                <h1 class="display-4">Halaman Product</h1>
+                <hr class="my-4">
+                <h2>Product List</h2>
+            </div>
+            <div class="row row-cols-1 row-cols-md-4 g-4 p-3">
+                <% if (msg.length !==0) { %>
+                    <div class="alert alert-success" role="alert">
+                        <%= msg %>
+                    </div>
+                    <% } %>
+                        <% if (msg2.length !==0) { %>
+                            <div class="alert alert-danger" role="alert">
+                                <%= msg2 %>
+                            </div>
+                            <% } %>
+                                <% if (product.length>= 1) { %>
+                                    <% product.forEach((product, i)=> { i++ %>
+                                        <div class="col">
+                                            <div class="card">
+                                                <img src="/img/<%= product.image %>" class="card-img-top"
+                                                    alt="image produk">
+                                                <div class="card-header">
+                                                    <h5 class="card-title">
+                                                        <%= product.brand %>
+                                                    </h5>
+                                                </div>
+                                                <div class="card-body">
+
+                                                    <p class="card-text">
+                                                        <%= product.part_for %>
+                                                    </p>
+                                                    <p class="card-title">
+                                                        Available Stock : <%= product.stock %>
+                                                    </p>
+                                                    <hr>
+                                                    <h3 class="card-text">Price List: <%= product.price %>
+                                                    </h3>
+
+                                                    <input class="form-check-input" type="checkbox" name="part_id"
+                                                        id="part_id" value="<%= product.part_id %>">
+                                                    <!-- <input type="number" class="form-control form-control-sm" min="0" id="stock" name="stock" id="stock" placeholder="Quantity">    -->
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                            <% } else { %>
+                                                <p>data tidak ditemukan</p>
+                                                <% } %>
+</form>

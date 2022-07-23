@@ -13,10 +13,10 @@
         </div>
         <% } %>
           <form method="post" action="/product" enctype="multipart/form-data">
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <label for="part_id" class="form-label">Part ID</label>
               <input type="number" class="form-control" id="part_id" name="part_id" required />
-            </div>
+            </div> -->
             <div class="mb-3">
               <label for="brand" class="form-label">Brand</label>
               <select class="form-select" id="brand" name="brand" aria-label="Nama Brand" required>
@@ -59,8 +59,12 @@
             <div class="mb-3">
               <label for="image" class="form-label">Upload</label>
               <input type="file" class="form-control" id="image" name="image">              
-            </div>        
-            <button type="submit" class="btn btn-success">Tambah Data</button>
+            </div>     
+            <div class="mb-3">
+              <label for="stock" class="form-label">Stock</label>
+              <input type="number" class="form-control" min="0" id="stock" name="stock">              
+            </div>       
+            <button type="submit" class="btn btn-success">Tambah Product</button>
             <a class="btn btn-primary" href="/product/list-product" role="button">Kembali</a>
           </form>
 

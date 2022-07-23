@@ -27,6 +27,7 @@
                             <th scope="col">Part Id</th>
                             <th scope="col">Brand</th>
                             <th scope="col">Part For</th>
+                            <th scope="col">Stock</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
@@ -42,6 +43,9 @@
                                     </td>
                                     <td>
                                         <%= product.part_for %>
+                                    </td>
+                                    <td>
+                                        <%= product.stock %>
                                     </td>
                                     <td>
                                         <a class="btn btn-primary badge" href="/product/detail-product/<%= product.part_id %> "

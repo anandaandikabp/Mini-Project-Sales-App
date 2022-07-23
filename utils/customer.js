@@ -47,12 +47,13 @@ const addCustomer = async (req, res) => {
             title: 'Laman Tambah customer',
             layout: 'layout/main-layout',
             errors: errors.array(),
+            customer: req.body,
         })
     } else {
-        const { cus_id, name, address, mobile } = req.body 
+        const { name, address, mobile } = req.body 
         await pool.query(`INSERT INTO customer(
-	    cus_id, name, address, mobile)
-	    VALUES ('${cus_id}', '${name}', '${address}', '${mobile}');`)
+	    name, address, mobile)
+	    VALUES ( '${name}', '${address}', '${mobile}');`)
         req.flash('msg', 'Data berhasil ditambahkan!')
         res.redirect('/customer/list-customer')
         console.log(errors)
@@ -73,16 +74,16 @@ const editCustomer = async (req, res) => {
 // update kontak yang dicari
 const updateCustomer = async (req, res) => {
     const errors = validationResult(req);
-    const { cus_id, brand, part_for, price } = req.body
+    const { cus_id, name, address, mobile } = req.body
     if (!errors.isEmpty()) {
         res.render('customer/edit-customer', {
             title: 'Edit customer',
             layout: 'layout/main-layout',
             errors: errors.array(),
-            contact: req.body,
+            customer: req.body,
         })
     } else {
-        await pool.query(`UPDATE customer SET cus_id = '${cus_id}', brand = '${brand}', part_for = '${part_for}', price = '${price}' WHERE cus_id = '${cus_id}'`)
+        await pool.query(`UPDATE customer SET name = '${name}', address = '${address}', mobile = ${mobile} WHERE cus_id = ${cus_id}`)
         req.flash('msg', 'Data berhasil diupdate!')
         res.redirect('/customer/list-customer')
         console.log(errors)

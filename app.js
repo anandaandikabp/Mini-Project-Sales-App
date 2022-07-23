@@ -11,7 +11,8 @@ const session = require('express-session');
 const multer = require('multer');
 const pool = require('./utils/db');
 const { loadProduct, detailProduct, hapusProduct, addProduct, editProduct, updateProduct } = require('./utils/product');
-const { loadCustomer, detailCustomer, addCustomer, hapusCustomer } = require('./utils/customer');
+const { loadCustomer, detailCustomer, addCustomer, hapusCustomer, editCustomer, updateCustomer } = require('./utils/customer');
+const { loadListProduct, detailSalesProduct, cartProduct } = require('./utils/selling');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -94,25 +95,13 @@ app.get('/product/add-product', (req, res) => {
 app.get('/product/detail-product/:part_id', detailProduct);
 
 // proses input data dengan validator produk
-app.post('/product', upload.array('image', 1), [
-    body('part_id').custom(async (value) => {
-        const query = await pool.query(`SELECT * FROM part WHERE part_id = ${value}`)
-        const duplikat = query.rows[0];
-        if (duplikat) {
-            throw new Error('ID sudah digunakan!')
-        }
-        return true;
-    }),
-    check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
-], addProduct)
+app.post('/product', upload.array('image', 1), addProduct)
 
 // get data produk yg mau diedit
 app.get('/product/edit/:part_id', editProduct);
 
 // proses edit produk
-app.post('/product/update', [
-    check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
-], updateProduct);
+app.post('/product/update', updateProduct);
 
 // hapus produk
 app.get('/product/delete/:part_id', hapusProduct);
@@ -136,44 +125,63 @@ app.get('/customer/add-customer', (req, res) => {
 app.get('/customer/detail-customer/:cus_id', detailCustomer);
 
 // proses input data dengan validator customer
-app.post('/customer', [
-    body('cus_id').custom(async (value) => {
-        const query = await pool.query(`SELECT * FROM customer WHERE cus_id = ${value}`)
-        const duplikat = query.rows[0];
-        if (duplikat) {
-            throw new Error('ID sudah digunakan!')
-        }
-        return true;
-    }),
+app.post('/customer', [check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
 ], addCustomer)
 
-// // get data customer yg mau diedit
-// app.get('/customer/edit/:cus_id', editCustomer);
+// get data customer yg mau diedit
+app.get('/customer/edit/:cus_id', editCustomer);
 
-// // proses edit customer
-// // app.post('/customer/update',  async (req, res) => {
-// //     const errors = validationResult(req);
-// //     const { part_id, brand, part_for, price } = req.body
-// //     if (!errors.isEmpty()) {
-
-// //         res.render('product/edit-product', {
-// //             title: 'Edit Product',
-// //             layout: 'layout/main-layout',
-// //             errors: errors.array(),
-// //             product: req.body
-// //         })
-// //     } else {
-// //         // updateContact(req.body)
-// //         await pool.query(`UPDATE part SET brand = '${brand}', part_for = '${part_for}', price = '${price}' WHERE part_id = '${part_id}'`)
-// //         req.flash('msg', 'Data berhasil diupdate!')
-// //         res.redirect('/product/list-product')
-// //     }
-// // })
+//  proses edit customer
+app.post('/customer/update', [
+    check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
+], updateCustomer)
 
 // hapus customer
 app.get('/customer/delete/:cus_id', hapusCustomer);
 
 // //                                                      AKHIR CUSTOMER
+
+//                                                      SELLING
+
+// list semua product
+app.get('/sales/list-product', loadListProduct);
+
+// // tambah data customer
+// app.get('/customer/add-customer', (req, res) => {
+//     res.render('customer/add-customer', {
+//         title: 'Laman Tambah Customer',
+//         layout: 'layout/main-layout',
+//     });
+// })
+
+// detail produk sales
+app.get('/sales/cart-product/:part_id', cartProduct);
+
+// // proses input data dengan validator customer
+// app.post('/customer', [
+//     body('cus_id').custom(async (value) => {
+//         const query = await pool.query(`SELECT * FROM customer WHERE cus_id = ${value}`)
+//         const duplikat = query.rows[0];
+//         if (duplikat) {
+//             throw new Error('ID sudah digunakan!')
+//         }
+//         return true;
+//     }),
+//     check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
+// ], addCustomer)
+
+// // get data customer yg mau diedit
+// app.get('/customer/edit/:cus_id', editCustomer);
+
+// //  proses edit customer
+// app.post('/customer/update', [
+//     check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
+// ], updateCustomer)
+
+// // hapus customer
+// app.get('/customer/delete/:cus_id', hapusCustomer);
+
+// //                                                      AKHIR SELLING
 
 app.use('/', (req, res) => {
     res.status(404)
