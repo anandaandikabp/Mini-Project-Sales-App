@@ -17,35 +17,23 @@ const loadListProduct = async (req, res) => {
     return product;
 };
 
-// menampilkan detail produk yang dicari
-const detailSalesProduct = async (req, res) => {
-    const query = await pool.query(`SELECT * FROM part WHERE part_id = '${req.params.part_id}'`)
-    const product = query.rows[0];
-    if (!product) {
-        console.log((`${part_id} tidak ditemukan`));
-        req.flash('msg2', 'Data tidak ditemukan!')
-        res.redirect('/product')
-        return false;
-    } else {
-        console.log(product.part_id);
-        console.log(product.brand);
-        console.log(product.part_for);
-        console.log(product.price);
-        res.render('sales/detail-selling-product', {
-            title: 'Laman Detail',
-            layout: 'layout/main-layout',
-            product,
-        })    
-    }
-    return product;
-}
-
-// menampilkan cart detail produk yang dicari
+// menampilkan cart detail produk yang dipilih
 const cartProduct = async (req, res) => {
-    const query = await pool.query(`SELECT * FROM part WHERE part_id = '${req.params.part_id}'`)
-    const product = query.rows[0];
+    const query = (await pool.query(`SELECT * FROM part`)).rows
+    let product = []
+    if (Array.isArray(req.body.part_id)) {
+        req.body.part_id.forEach(e => {
+            product.push(query.find(d => d.part_id == e));
+        });
+
+    }else{
+        product.push(query.find(e => e.part_id == req.body.part_id));
+    }
+    console.log('/',product);
+
     if (!product) {
         console.log((`${part_id} tidak ditemukan`));
+        msg3: req.flash('msg'),
         req.flash('msg2', 'Data tidak ditemukan!')
         res.redirect('/product')
         return false;
@@ -55,7 +43,7 @@ const cartProduct = async (req, res) => {
         console.log(product.part_for);
         console.log(product.price);
         res.render('sales/cart-product', {
-            title: 'Laman Detail',
+            title: 'Laman Cart',
             layout: 'layout/main-layout',
             product,
         })    
@@ -63,27 +51,25 @@ const cartProduct = async (req, res) => {
     return product;
 }
 
-// // tambah data produk
-// const addProduct = async (req, res) => {
-//     const errors = validationResult(req);
-//     console.log(errors); 
-//     if (!errors.isEmpty()) {
-//         res.render('product/add-product', {
-//             title: 'Laman Tambah Product',
-//             layout: 'layout/main-layout',
-//             errors: errors.array(),
-//         })
-//     } else {
-//         const { part_id, brand, part_for, price } = req.body 
-//         const img = req.files[0].filename
-//         await pool.query(`INSERT INTO part(
-// 	    part_id, brand, part_for, price, image)
-// 	    VALUES ('${part_id}', '${brand}', '${part_for}', '${price}', '${img}');`)
-//         req.flash('msg', 'Data berhasil ditambahkan!')
-//         res.redirect('/product/list-product')
-//         console.log(errors)
-//     }
-// }
+// tambah data produk
+const buyProduct = async (req, res) => {
+    console.log(errors); 
+    if (!errors.isEmpty()) {
+        res.render('sales/list-product', {
+            title: 'Laman List Product',
+            layout: 'layout/main-layout',
+            errors: errors.array(),
+        })
+    } else {
+        const { transc_id, cus_id, part_id, date_trans, total } = req.body 
+        await pool.query(`INSERT INTO invoice(
+	    transc_id, cus_id, part_id, date_trans, total)
+	    VALUES ('${transc_id}', '${cus_id}', '${part_id}', 'dateNow()', '${total}');`)
+        req.flash('msg', 'Product berhasil dibeli!')
+        res.redirect('/sales/list-product')
+        console.log(errors)
+    }
+}
 
 // // edit produk yang dicari
 // const editProduct = async (req, res) => {
@@ -135,5 +121,5 @@ const cartProduct = async (req, res) => {
     
 // };
 
-module.exports = { loadListProduct, detailSalesProduct, cartProduct };
+module.exports = { loadListProduct, cartProduct, buyProduct };
 //, , addProduct, hapusProduct, editProduct, updateProduct

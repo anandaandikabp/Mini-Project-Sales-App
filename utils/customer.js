@@ -1,5 +1,6 @@
 const fs = require('fs');
 const pool = require('./db');
+const bcrypt = require('bcrypt');
 
 const { body, validationResult, check } = require('express-validator');
 
@@ -33,7 +34,7 @@ const detailCustomer = async (req, res) => {
             title: 'Laman Detail',
             layout: 'layout/main-layout',
             customer,
-        })    
+        })
     }
     return customer;
 }
@@ -41,21 +42,30 @@ const detailCustomer = async (req, res) => {
 // tambah data costumer
 const addCustomer = async (req, res) => {
     const errors = validationResult(req);
-    console.log(errors); 
+    console.log(errors);
     if (!errors.isEmpty()) {
-        res.render('customer/add-customer', {
-            title: 'Laman Tambah customer',
+        res.render('register', {
+            title: 'Laman Registrasi Customer',
             layout: 'layout/main-layout',
             errors: errors.array(),
             customer: req.body,
         })
     } else {
-        const { name, address, mobile } = req.body 
+        const { email, name, address, mobile, password } = req.body
+        const hashedPassword = await bcrypt.hash(password, 10);
+        console.log({
+                    email,
+                    name,
+                    address,
+                    mobile,
+                    password,
+                });
+        console.log(hashedPassword);
         await pool.query(`INSERT INTO customer(
-	    name, address, mobile)
-	    VALUES ( '${name}', '${address}', '${mobile}');`)
-        req.flash('msg', 'Data berhasil ditambahkan!')
-        res.redirect('/customer/list-customer')
+    email, name, address, mobile, password)
+    VALUES ( '${email}', '${name}', '${address}', ${mobile}, '${hashedPassword}');`)
+        req.flash('msg_success', 'Data berhasil ditambahkan!')
+        res.redirect('/login')
         console.log(errors)
     }
 }
@@ -74,7 +84,7 @@ const editCustomer = async (req, res) => {
 // update kontak yang dicari
 const updateCustomer = async (req, res) => {
     const errors = validationResult(req);
-    const { cus_id, name, address, mobile } = req.body
+    const { cus_id, email, name, address, mobile, password } = req.body
     if (!errors.isEmpty()) {
         res.render('customer/edit-customer', {
             title: 'Edit customer',
@@ -83,7 +93,7 @@ const updateCustomer = async (req, res) => {
             customer: req.body,
         })
     } else {
-        await pool.query(`UPDATE customer SET name = '${name}', address = '${address}', mobile = ${mobile} WHERE cus_id = ${cus_id}`)
+        await pool.query(`UPDATE customer SET email = '${email}', name = '${name}', address = '${address}', mobile = ${mobile}, password = '${password}' WHERE cus_id = ${cus_id}`)
         req.flash('msg', 'Data berhasil diupdate!')
         res.redirect('/customer/list-customer')
         console.log(errors)
@@ -102,7 +112,7 @@ const hapusCustomer = async (req, res) => {
         req.flash('msg', 'Data berhasil dihapus!')
         res.redirect('/customer/list-customer');
     }
-    
+
 };
 
 module.exports = { loadCustomer, detailCustomer, addCustomer, hapusCustomer, editCustomer, updateCustomer };
