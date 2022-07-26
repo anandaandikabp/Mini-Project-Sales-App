@@ -1,11 +1,14 @@
-<form action="/sales/invoice" method="get" id="part_id" name="part_id">
+<form action="/sales/invoice" method="post" id="part_id" name="part_id">
     <div class="row m-3 p-3">
-        <h1>Total Harga :</h1>
+        <h1>Produk Dipilih</h1>
         <hr>
+        <!-- input -->
+        <input type="hidden" name="id" value="<%= id %>">
+        <input type="hidden" name="stock" value="<%= stock %>">
 
         <div class="d-grid ml-3 gap-2 d-md-block">
             <a class="btn btn-primary" href="/sales/list-product" role="button">Kembali</a>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-success">Beli</button>
         </div>
     </div>
     <% if (typeof errors !='undefined' ) { %>

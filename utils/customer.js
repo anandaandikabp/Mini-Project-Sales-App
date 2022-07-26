@@ -65,7 +65,7 @@ const addCustomer = async (req, res) => {
     email, name, address, mobile, password)
     VALUES ( '${email}', '${name}', '${address}', ${mobile}, '${hashedPassword}');`)
         req.flash('msg_success', 'Data berhasil ditambahkan!')
-        res.redirect('/login')
+        res.redirect('/')
         console.log(errors)
     }
 }

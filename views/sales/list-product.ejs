@@ -4,7 +4,7 @@
             <div class="jumbotron">
                 <a class="btn btn-success btn-lg float-end mt-4" onclick="document.getElementById('part_id').submit()"
                     role="button"><i class="bi bi-bag-check-fill"></i> Add to Cart</a>
-                <h1 class="display-4">Halaman Product</h1>
+                <h1 class="display-4">Buy Product</h1>
                 <hr class="my-4">
                 <h2>Product List</h2>
             </div>
@@ -24,7 +24,7 @@
                                         <div class="col">
                                             <div class="card">
                                                 <img src="/img/<%= product.image %>" class="card-img-top"
-                                                    alt="image produk">
+                                                    alt="image produk" style="height: 95px;">
                                                 <div class="card-header">
                                                     <h5 class="card-title">
                                                         <%= product.brand %>
@@ -39,13 +39,16 @@
                                                         Available Stock : <%= product.stock %>
                                                     </p>
                                                     <hr>
-                                                    <h3 class="card-text">Price List: <%= product.price %>
+                                                    <h3 class="card-text">Price List: <br> <%= product.price %>
                                                     </h3>
 
                                                     <input class="form-check-input" type="checkbox" name="part_id"
-                                                        id="part_id" value="<%= product.part_id %>"><span> Pilih?</span>
-                                                    <input type="number" class="form-control" id="stock" name="stock"
-                                                        required value="stock" placeholder="Quantity" />
+                                                        id="part_id" value="<%= product.part_id %>"
+                                                        onclick="document.getElementById('stock<%= product.part_id %>').removeAttribute('disabled')"><span>
+                                                        Pilih?</span>
+                                                    <input type="number" class="form-control"
+                                                        id="stock<%= product.part_id %>" name="stock" required
+                                                        value="stock" placeholder="Quantity" disabled='disabled' />
                                                     <!-- <input type="number" class="form-control form-control-sm" min="0" id="stock" name="stock" id="stock" placeholder="Quantity">    -->
 
                                                 </div>

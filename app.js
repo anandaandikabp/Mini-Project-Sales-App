@@ -4,6 +4,7 @@ const { body, validationResult, check } = require('express-validator');
 const app = express();
 const path = require('path');
 const port = 3000;
+const fs = require('fs');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
@@ -19,7 +20,7 @@ initializePassport(passport);
 
 const { loadProduct, detailProduct, hapusProduct, addProduct, editProduct, updateProduct } = require('./utils/product');
 const { loadCustomer, detailCustomer, addCustomer, hapusCustomer, editCustomer, updateCustomer } = require('./utils/customer');
-const { loadListProduct, cartProduct, buyProduct } = require('./utils/selling');
+const { loadListProduct, cartProduct, buyProduct, invoice } = require('./utils/selling');
 const { resourceLimits } = require('worker_threads');
 
 const storage = multer.diskStorage({
@@ -58,7 +59,9 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 
 // 3rd party middleware
-app.use(morgan('dev'));
+const log = fs.createWriteStream(path.join(__dirname, 'app.log'), {flags : 'a'})
+app.use(morgan('combined', {stream : log}));
+
 app.use(cookieParser('secret'))
 app.use(flash());
 
@@ -70,16 +73,16 @@ app.use(session({
 }));
 
 // login
-app.get('/login', checkAuthenticated, (req, res, next) => {
-    res.render('login', {
+app.get('/',  (req, res) => {
+    res.render('index', {
         title: 'Laman login',
         layout: 'layout/main-layout',
     });
 });
 
 app.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
-    failRedirect: '/login',
+    successRedirect: '/home',
+    failRedirect: '/',
     failureFlash: true
 })
 );
@@ -87,33 +90,28 @@ app.post('/login', passport.authenticate('local', {
 // logout
 app.get('/logout', (req, res) => {
     req.logOut(
-        function(err){
+        function (err) {
             if (err) {
                 return next(err)
             }
             req.flash('success_msg', "telah keluar");
-            res.redirect('/login');
+            res.redirect('/');
         }
     );
-   
+
 });
 
-function checkAuthenticated(req, res, next) {
-    if (req.isAuthenticated()){
-        return res.redirect('/')
-    } 
-    next();
-}
-
-function checkNotAuthenticated(req, res, next) {
-    if (req.isAuthenticated()){
-        return next();
-    } 
-    res.redirect('/login');
-}
+// home
+app.get('/home',  (req, res) => {
+    res.render('home',
+        {
+            title: 'Sales App Auto Car',
+            layout: 'layout/main-layout',
+        });
+});
 
 // get register
-app.get('/register', checkAuthenticated, (req, res, next) => {
+app.get('/register',  (req, res) => {
     res.render('register', {
         title: 'Laman register',
         layout: 'layout/main-layout',
@@ -121,32 +119,15 @@ app.get('/register', checkAuthenticated, (req, res, next) => {
 });
 
 // register
-app.post('/register', [
+app.post('/register',  [
     check('email', 'Email tidak valid').isEmail(),
     check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
 ], addCustomer);
 
-// index
-app.get('/', checkAuthenticated, (req, res) => {
-    res.render('index',
-        {
-            title: 'Sales App Auto Car',
-            layout: 'layout/main-layout',
-        });
-});
-
-// about
-app.get('/about', (req, res, next) => {
-    res.render('about', {
-        title: 'Laman About',
-        layout: 'layout/main-layout',
-    });
-});
-
 //                                                      PRODUK
 
 // list semua produk
-app.get('/product/list-product', loadProduct);
+app.get('/product/list-product',  loadProduct);
 
 // tambah data produk
 app.get('/product/add-product', (req, res) => {
@@ -157,72 +138,73 @@ app.get('/product/add-product', (req, res) => {
 })
 
 // detail produk
-app.get('/product/detail-product/:part_id', detailProduct);
+app.get('/product/detail-product/:part_id',   detailProduct);
 
 // proses input data dengan validator produk
-app.post('/product', upload.array('image', 1), addProduct)
+app.post('/product', upload.array('image', 1),   addProduct)
 
 // get data produk yg mau diedit
-app.get('/product/edit/:part_id', editProduct);
+app.get('/product/edit/:part_id',   editProduct);
 
 // proses edit produk
-app.post('/product/update', updateProduct);
+app.post('/product/update',   updateProduct);
 
 // hapus produk
-app.get('/product/delete/:part_id', hapusProduct);
+app.get('/product/delete/:part_id',  hapusProduct);
 
 //                                                      AKHIR PRODUK
 
 //                                                      CUSTOMER
 
 // list semua customer
-app.get('/customer/list-customer', loadCustomer);
+app.get('/customer/list-customer',  loadCustomer);
 
 // detail customer
-app.get('/customer/detail-customer/:cus_id', detailCustomer);
-
-// // proses input data dengan validator customer
-// app.post('/customer', [check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
-// ], addCustomer)
+app.get('/customer/detail-customer/:cus_id',  detailCustomer);
 
 // get data customer yg mau diedit
-app.get('/customer/edit/:cus_id', editCustomer);
+app.get('/customer/edit/:cus_id',  editCustomer);
 
 //  proses edit customer
-app.post('/customer/update', [
+app.post('/customer/update',  [
     check('email', 'Email tidak valid').isEmail(),
     check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
 ], updateCustomer)
 
 // hapus customer
-app.get('/customer/delete/:cus_id', hapusCustomer);
+app.get('/customer/delete/:cus_id',  hapusCustomer);
 
 // //                                                      AKHIR CUSTOMER
 
 //                                                      SELLING
 
 // list semua product
-app.get('/sales/list-product', loadListProduct);
+app.get('/sales/list-product',  loadListProduct);
 
 // detail produk sales
-app.post('/sales/cart-product', cartProduct);
-
+app.post('/sales/cart-product',  cartProduct);
 
 // proses pembelian cart produk
-app.post('/sales/invoice', buyProduct)
+app.post('/sales/invoice',  buyProduct)
 
-// // get data customer yg mau diedit
-// app.get('/customer/edit/:cus_id', editCustomer);
-
-// //  proses edit customer
-// app.post('/customer/update', [
-//     check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
-// ], updateCustomer)
-
-// // hapus customer
-// app.get('/customer/delete/:cus_id', hapusCustomer);
+// tampil invoice
+app.get('/sales/invoice/:id',  invoice);
 
 // //                                                      AKHIR SELLING
+
+function checkAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return res.redirect('/home')
+    }
+    next()
+}
+
+function checkNotAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/');
+}
 
 app.use('/', (req, res) => {
     res.status(404)
