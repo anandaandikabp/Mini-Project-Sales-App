@@ -1,0 +1,61 @@
+
+    <div class="row">
+        <div class="col">
+            <div class="jumbotron">
+                <h1 class="display-4">Halaman List Penjualan</h1>
+                <hr class="my-4">
+            </div>
+            <div class="col">
+                <% if (msg.length !== 0) { %>
+                    <div class="alert alert-success" role="alert">
+                        <%= msg %> 
+                      </div>
+                <% } %>
+                <% if (msg2.length !== 0) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <%= msg2 %> 
+                      </div>
+                <% } %>               
+                
+                <br>                
+                <h2>List Penjualan</h2>
+                <!-- menampilkan data dari app -->
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Transaksi Id</th>
+                            <th scope="col">Tanggal Transaksi</th>
+                            <th scope="col">Detail Transaksi</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (product.length>= 1) { %>
+                            <% product.forEach((product, i)=> { i++ %>
+                                <tr>
+                                    <th scope="row">
+                                        <%= product.trans_id %>
+                                    </th>
+                                    <td>
+                                        <%= product.date_trans %>
+                                    </td>
+                                    <td>
+                                        <%= product.part_id %>
+                                    </td>
+                                    <td>
+                                        Rp. <%= product.total %>
+                                    </td>
+                                    <!-- <td>
+                                        <a class="btn btn-primary badge" href="/product/detail-product/<%# product.trans_id %> "
+                                            role="button">Detail</a>
+                                    </td> -->
+                                </tr>
+                                <% }) %>
+                                    <% } else { %>
+                                        <p>data tidak ditemukan</p>
+                                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

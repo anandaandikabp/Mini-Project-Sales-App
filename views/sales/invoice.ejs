@@ -5,7 +5,7 @@
                 INVOICE
             </div>
             <div class="card-body">
-                <h5 class="card-title">Total Harga : <%= result.total %>
+                <h5 class="card-title">Total Harga : Rp. <%= result.total %>
                 </h5>
                 <p class="card-text">ID Transaksi : <%= result.trans_id %>
                 </p>
@@ -20,7 +20,7 @@
         
             <div class="card" style="width: 18rem;">
                 <div class="card-header">
-                    Featured
+                    Tangga Transaksi
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
@@ -28,10 +28,13 @@
                     </li>
 
                     <li class="list-group-item">
-                        <%= product.brand %>
+                        <h5>Brand :</h5> <%= product.brand %>
                     </li>
                     <li class="list-group-item">
-                        <%= product.part_for %>
+                        <h5>Part :</h5> <%= product.part_for %>
+                    </li>
+                    <li class="list-group-item">
+                        <h5>Part ID :</h5> <%= product.part_id %>
                     </li>
                 </ul>
             </div>

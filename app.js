@@ -20,7 +20,7 @@ initializePassport(passport);
 
 const { loadProduct, detailProduct, hapusProduct, addProduct, editProduct, updateProduct } = require('./utils/product');
 const { loadCustomer, detailCustomer, addCustomer, hapusCustomer, editCustomer, updateCustomer } = require('./utils/customer');
-const { loadListProduct, cartProduct, buyProduct, invoice } = require('./utils/selling');
+const { loadListProduct, cartProduct, buyProduct, invoice, loadSelling } = require('./utils/selling');
 const { resourceLimits } = require('worker_threads');
 
 const storage = multer.diskStorage({
@@ -73,7 +73,7 @@ app.use(session({
 }));
 
 // login
-app.get('/',  (req, res) => {
+app.get('/', (req, res) => {
     res.render('index', {
         title: 'Laman login',
         layout: 'layout/main-layout',
@@ -102,7 +102,7 @@ app.get('/logout', (req, res) => {
 });
 
 // home
-app.get('/home',  (req, res) => {
+app.get('/home', (req, res) => {
     res.render('home',
         {
             title: 'Sales App Auto Car',
@@ -111,7 +111,7 @@ app.get('/home',  (req, res) => {
 });
 
 // get register
-app.get('/register',  (req, res) => {
+app.get('/register', (req, res) => {
     res.render('register', {
         title: 'Laman register',
         layout: 'layout/main-layout',
@@ -119,7 +119,7 @@ app.get('/register',  (req, res) => {
 });
 
 // register
-app.post('/register',  [
+app.post('/register', [
     check('email', 'Email tidak valid').isEmail(),
     check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
 ], addCustomer);
@@ -127,7 +127,7 @@ app.post('/register',  [
 //                                                      PRODUK
 
 // list semua produk
-app.get('/product/list-product',  loadProduct);
+app.get('/product/list-product', loadProduct);
 
 // tambah data produk
 app.get('/product/add-product', (req, res) => {
@@ -138,73 +138,76 @@ app.get('/product/add-product', (req, res) => {
 })
 
 // detail produk
-app.get('/product/detail-product/:part_id',   detailProduct);
+app.get('/product/detail-product/:part_id',  detailProduct);
 
 // proses input data dengan validator produk
-app.post('/product', upload.array('image', 1),   addProduct)
+app.post('/product', upload.array('image', 1),  addProduct)
 
 // get data produk yg mau diedit
-app.get('/product/edit/:part_id',   editProduct);
+app.get('/product/edit/:part_id',  editProduct);
 
 // proses edit produk
-app.post('/product/update',   updateProduct);
+app.post('/product/update',  updateProduct);
 
 // hapus produk
-app.get('/product/delete/:part_id',  hapusProduct);
+app.get('/product/delete/:part_id', hapusProduct);
 
 //                                                      AKHIR PRODUK
 
 //                                                      CUSTOMER
 
 // list semua customer
-app.get('/customer/list-customer',  loadCustomer);
+app.get('/customer/list-customer', loadCustomer);
 
 // detail customer
-app.get('/customer/detail-customer/:cus_id',  detailCustomer);
+app.get('/customer/detail-customer/:cus_id', detailCustomer);
 
 // get data customer yg mau diedit
-app.get('/customer/edit/:cus_id',  editCustomer);
+app.get('/customer/edit/:cus_id', editCustomer);
 
 //  proses edit customer
-app.post('/customer/update',  [
+app.post('/customer/update', [
     check('email', 'Email tidak valid').isEmail(),
     check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
 ], updateCustomer)
 
 // hapus customer
-app.get('/customer/delete/:cus_id',  hapusCustomer);
+app.get('/customer/delete/:cus_id', hapusCustomer);
 
 // //                                                      AKHIR CUSTOMER
 
 //                                                      SELLING
 
 // list semua product
-app.get('/sales/list-product',  loadListProduct);
+app.get('/sales/list-product', loadListProduct);
+
+// list semua penjualan
+app.get('/sales/list-selling', loadSelling);
 
 // detail produk sales
-app.post('/sales/cart-product',  cartProduct);
+app.post('/sales/cart-product', cartProduct);
 
 // proses pembelian cart produk
-app.post('/sales/invoice',  buyProduct)
+app.post('/sales/invoice', buyProduct)
 
 // tampil invoice
-app.get('/sales/invoice/:id',  invoice);
+app.get('/sales/invoice/:id', invoice);
 
 // //                                                      AKHIR SELLING
 
-function checkAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return res.redirect('/home')
-    }
-    next()
-}
+// function checkAuthenticated(req, res, next) {
+//     if (req.isAuthenticated()) {
+//         return res.redirect('/home')
+//     }
+//     next()
+// }
 
-function checkNotAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/');
-}
+// function checkNotAuthenticated(req, res, next) {
+//     if (req.isAuthenticated()) {
+//         return next();
+//     }
+//     res.redirect('/index');
+// }
 
 app.use('/', (req, res) => {
     res.status(404)

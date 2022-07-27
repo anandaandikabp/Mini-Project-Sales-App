@@ -51,7 +51,7 @@ const addCustomer = async (req, res) => {
             customer: req.body,
         })
     } else {
-        const { email, name, address, mobile, password } = req.body
+        const { email, name, address, mobile, password, role } = req.body
         const hashedPassword = await bcrypt.hash(password, 10);
         console.log({
                     email,
@@ -59,11 +59,12 @@ const addCustomer = async (req, res) => {
                     address,
                     mobile,
                     password,
+                    role
                 });
         console.log(hashedPassword);
         await pool.query(`INSERT INTO customer(
-    email, name, address, mobile, password)
-    VALUES ( '${email}', '${name}', '${address}', ${mobile}, '${hashedPassword}');`)
+    email, name, address, mobile, password, role)
+    VALUES ( '${email}', '${name}', '${address}', ${mobile}, '${hashedPassword}', '${role}');`)
         req.flash('msg_success', 'Data berhasil ditambahkan!')
         res.redirect('/')
         console.log(errors)

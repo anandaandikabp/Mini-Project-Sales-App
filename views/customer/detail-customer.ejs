@@ -8,11 +8,14 @@
                     <h3 class="card-title">
                         Customer ID : <%= customer.cus_id %>
                     </h3>
-                    <p class="card-body">
+                    <p>
                         Customer Address : <%= customer.address %>
                     </p>
-                    <p class="card-body">
+                    <p>
                         Customer Phone Number : <%= customer.mobile %>
+                    </p>
+                    <p>
+                        Role : <%= customer.role %>
                     </p>
                     <a href="/customer/edit/<%= customer.cus_id %>" class="btn btn-warning">Edit</a>
                     <a href="/customer/delete/<%= customer.cus_id %>" class="btn btn-danger" onclick="return confirm('Yakin?')">Hapus</a>

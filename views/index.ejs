@@ -1,28 +1,41 @@
 <ul>
     <% if(messages.success_msg) { %>
-    <li><%= messages.success_msg %></li>
-    <% } %> 
+        <li>
+            <%= messages.success_msg %>
+        </li>
+        <% } %>
 </ul>
 <ul>
     <% if(messages.error) { %>
-    <li><%= messages.error %></li>
-    <% } %> 
+        <li>
+            <%= messages.error %>
+        </li>
+        <% } %>
 </ul>
-
-<div class="row m-3 p-3">
-    <div class="col">
-        <form action="/login" method="POST">
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp">
-                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+<div class="container">
+    <div class="row m-3 p-3">
+        <div class="col-md-6">
+            <form action="/login" method="POST">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+                <button type="submit" class="btn btn-primary" value="login">Submit</button>
+            </form>
+            <div class="hstack gap-3">
+                <div class="ms-auto">Belum punya akun?</div>
+                <div class="vr"></div>
+                <div class="bg-light border"><a class="btn btn-success btn-lg float-end" href="/register"
+                        role="button"><i class="bi bi-file-earmark-plus-fill"></i> Registrasi</a></div>
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password">
-            </div>
-            <button type="submit" class="btn btn-primary" value="login">Submit</button>
-        </form>
-        <a class="btn btn-success btn-lg float-end" href="/register" role="button"><i class="bi bi-file-earmark-plus-fill"></i> Registrasi</a>
+        </div>
+        <div class="col-md-6">
+            <img src="../img/ind1.png" class="rounded img-fluid float-end" alt="login">
+        </div>
     </div>
 </div>

@@ -3,12 +3,26 @@ const pool = require('./db');
 
 const { body, validationResult, check } = require('express-validator');
 
-// load data selling produk
+// load data produk
 const loadListProduct = async (req, res) => {
     const query = await pool.query('SELECT * FROM part')
     const product = query.rows;
     res.render('sales/list-product', {
         title: 'Laman Product',
+        layout: 'layout/main-layout',
+        product,
+        msg: req.flash('msg'),
+        msg2: req.flash('msg2'),
+    });
+    return product;
+};
+
+// load data penjualan
+const loadSelling = async (req, res) => {
+    const query = await pool.query('SELECT * FROM invoice')
+    const product = query.rows;
+    res.render('sales/list-selling', {
+        title: 'Laman List Selling',
         layout: 'layout/main-layout',
         product,
         msg: req.flash('msg'),
@@ -110,4 +124,4 @@ const invoice =
         })
     }
 
-module.exports = { loadListProduct, cartProduct, buyProduct, invoice };
+module.exports = { loadListProduct, cartProduct, buyProduct, invoice, loadSelling };
