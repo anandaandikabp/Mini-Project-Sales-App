@@ -1,4 +1,4 @@
-
+<% let rp = Intl.NumberFormat('id-ID') %> 
     <div class="row">
         <div class="col">
             <div class="jumbotron">
@@ -43,7 +43,7 @@
                                         <%= product.part_id %>
                                     </td>
                                     <td>
-                                        Rp. <%= product.total %>
+                                        Rp. <%= rp.format(product.total) %>
                                     </td>
                                     <!-- <td>
                                         <a class="btn btn-primary badge" href="/product/detail-product/<%# product.trans_id %> "

@@ -1,3 +1,4 @@
+<% let rp = Intl.NumberFormat('id-ID') %> 
 <form action="/sales/invoice" method="post" id="part_id" name="part_id">
     <div class="row m-3 p-3">
         <h1>Produk Dipilih</h1>
@@ -43,14 +44,14 @@
                                             Part ID : <%= product.part_id %>
                                         </h5>
                                         <h5 class="card-title">
-                                            Available Stock : <%= product.stock %>
+                                            Quantity : <%= product.quantity %>
                                         </h5>
                                         <h5 class="card-title">
                                             Part For : <%= product.part_for %>
                                         </h5>
                                         <hr>
                                         <h1 class="card-text">
-                                            Price List: Rp. <%= product.price %>
+                                            Price List: Rp. <%= rp.format(product.price) %>
                                         </h1>
 
                                     </div>

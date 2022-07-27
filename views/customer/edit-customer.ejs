@@ -14,6 +14,11 @@
 
         <form method="post" action="/customer/update">
           <input type="hidden" name="cus_id" value="<%= customer.cus_id %>">
+          <input type="hidden" name="password" value="<%= customer.password %>">
+          <div class="mb-3">
+            <label for="email" class="form-label">email</label>
+            <input type="text" class="form-control" id="email" name="email" value="<%= customer.email %>" required />
+          </div>
           <div class="mb-3">
             <label for="name" class="form-label">Name</label>
             <input type="text" class="form-control" id="name" name="name" value="<%= customer.name %>" required />

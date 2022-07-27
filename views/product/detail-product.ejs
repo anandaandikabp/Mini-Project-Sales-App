@@ -1,3 +1,4 @@
+<% let rp = Intl.NumberFormat('id-ID') %> 
 <div class="row m-3 p-3">
     <div class="col-md-4 mt-5">
         <div class="col">
@@ -23,7 +24,7 @@
                 </h5>
                 <hr>
                 <h1 class="card-text">
-                    Price List: <%= product.price %>
+                    Price List: Rp. <%= rp.format(product.price) %>
                 </h1>
                 <a href="/product/edit/<%= product.part_id %>" class="btn btn-warning">Edit</a>
                 <a href="/product/delete/<%= product.part_id %>" class="btn btn-danger"

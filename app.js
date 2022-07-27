@@ -9,14 +9,11 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
 const session = require('express-session');
-const multer = require('multer');
-const pool = require('./utils/db');
+const multer = require('multer');3
 const passport = require('passport');
 const initializePassport = require("./utils/passportConfig");
 
 initializePassport(passport);
-
-
 
 const { loadProduct, detailProduct, hapusProduct, addProduct, editProduct, updateProduct } = require('./utils/product');
 const { loadCustomer, detailCustomer, addCustomer, hapusCustomer, editCustomer, updateCustomer } = require('./utils/customer');
@@ -44,11 +41,11 @@ app.use((req, res, next) => {
     console.log('Time:', Date.now())
     next()
 })
+
 app.use(session({
     secret: 'secret',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: true }
 }))
 app.use(passport.initialize());
 app.use(passport.session());
@@ -73,16 +70,16 @@ app.use(session({
 }));
 
 // login
-app.get('/', (req, res) => {
+app.get('/', checkAuthenticated, (req, res) => {
     res.render('index', {
         title: 'Laman login',
-        layout: 'layout/main-layout',
+        layout: 'layout/login-layout',
     });
 });
 
 app.post('/login', passport.authenticate('local', {
     successRedirect: '/home',
-    failRedirect: '/',
+    failureRedirect: '/',
     failureFlash: true
 })
 );
@@ -102,7 +99,8 @@ app.get('/logout', (req, res) => {
 });
 
 // home
-app.get('/home', (req, res) => {
+app.get('/home', checkNotAuthenticated, (req, res) => {
+    console.log(req.user);
     res.render('home',
         {
             title: 'Sales App Auto Car',
@@ -111,10 +109,10 @@ app.get('/home', (req, res) => {
 });
 
 // get register
-app.get('/register', (req, res) => {
+app.get('/register', checkAuthenticated, (req, res) => {
     res.render('register', {
         title: 'Laman register',
-        layout: 'layout/main-layout',
+        layout: 'layout/login-layout',
     });
 });
 
@@ -127,7 +125,7 @@ app.post('/register', [
 //                                                      PRODUK
 
 // list semua produk
-app.get('/product/list-product', loadProduct);
+app.get('/product/list-product', checkNotAuthenticated, loadProduct);
 
 // tambah data produk
 app.get('/product/add-product', (req, res) => {
@@ -138,29 +136,29 @@ app.get('/product/add-product', (req, res) => {
 })
 
 // detail produk
-app.get('/product/detail-product/:part_id',  detailProduct);
+app.get('/product/detail-product/:part_id', checkNotAuthenticated, detailProduct);
 
 // proses input data dengan validator produk
-app.post('/product', upload.array('image', 1),  addProduct)
+app.post('/product', upload.array('image', 1), addProduct)
 
 // get data produk yg mau diedit
-app.get('/product/edit/:part_id',  editProduct);
+app.get('/product/edit/:part_id', checkNotAuthenticated, editProduct);
 
 // proses edit produk
-app.post('/product/update',  updateProduct);
+app.post('/product/update', updateProduct);
 
 // hapus produk
-app.get('/product/delete/:part_id', hapusProduct);
+app.get('/product/delete/:part_id', checkNotAuthenticated, hapusProduct);
 
 //                                                      AKHIR PRODUK
 
 //                                                      CUSTOMER
 
 // list semua customer
-app.get('/customer/list-customer', loadCustomer);
+app.get('/customer/list-customer', checkNotAuthenticated, loadCustomer);
 
 // detail customer
-app.get('/customer/detail-customer/:cus_id', detailCustomer);
+app.get('/customer/detail-customer/:cus_id', checkNotAuthenticated, detailCustomer);
 
 // get data customer yg mau diedit
 app.get('/customer/edit/:cus_id', editCustomer);
@@ -179,40 +177,41 @@ app.get('/customer/delete/:cus_id', hapusCustomer);
 //                                                      SELLING
 
 // list semua product
-app.get('/sales/list-product', loadListProduct);
+app.get('/sales/list-product', checkNotAuthenticated, loadListProduct);
 
 // list semua penjualan
-app.get('/sales/list-selling', loadSelling);
+app.get('/sales/list-selling', checkNotAuthenticated, loadSelling);
 
 // detail produk sales
-app.post('/sales/cart-product', cartProduct);
+app.post('/sales/cart-product', checkNotAuthenticated, cartProduct);
 
 // proses pembelian cart produk
-app.post('/sales/invoice', buyProduct)
+app.post('/sales/invoice', checkNotAuthenticated, buyProduct)
 
 // tampil invoice
-app.get('/sales/invoice/:id', invoice);
+app.get('/sales/invoice/:id', checkNotAuthenticated, invoice);
 
 // //                                                      AKHIR SELLING
-
-// function checkAuthenticated(req, res, next) {
-//     if (req.isAuthenticated()) {
-//         return res.redirect('/home')
-//     }
-//     next()
-// }
-
-// function checkNotAuthenticated(req, res, next) {
-//     if (req.isAuthenticated()) {
-//         return next();
-//     }
-//     res.redirect('/index');
-// }
 
 app.use('/', (req, res) => {
     res.status(404)
     res.send('Not Found 404')
 });
+
+function checkAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return res.redirect('/home')
+    }
+    next()
+}
+
+function checkNotAuthenticated(req, res, next) {
+    console.log(req.isAuthenticated());
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    return res.redirect('/');
+}
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

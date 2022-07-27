@@ -1,3 +1,4 @@
+<% let rp = Intl.NumberFormat('id-ID') %> 
 <div class="row p-3">
     <div class="col">
         <div class="card text-center">
@@ -5,7 +6,7 @@
                 INVOICE
             </div>
             <div class="card-body">
-                <h5 class="card-title">Total Harga : Rp. <%= result.total %>
+                <h5 class="card-title">Total Harga : Rp. <%= rp.format(result.total) %>
                 </h5>
                 <p class="card-text">ID Transaksi : <%= result.trans_id %>
                 </p>
@@ -35,6 +36,9 @@
                     </li>
                     <li class="list-group-item">
                         <h5>Part ID :</h5> <%= product.part_id %>
+                    </li>
+                    <li class="list-group-item">
+                        <h5>Quantity :</h5> <%= result.quantity %>
                     </li>
                 </ul>
             </div>

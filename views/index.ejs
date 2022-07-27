@@ -1,18 +1,23 @@
-<ul>
-    <% if(messages.success_msg) { %>
-        <li>
-            <%= messages.success_msg %>
-        </li>
-        <% } %>
-</ul>
-<ul>
-    <% if(messages.error) { %>
-        <li>
-            <%= messages.error %>
-        </li>
-        <% } %>
-</ul>
+
 <div class="container">
+    <ul class="p-3">
+        <% if(messages.success_msg) { %>
+            <li>
+                <div class="alert alert-success" role="alert">
+                <%= messages.success_msg %>
+            </div>
+            </li>
+            <% } %>
+    </ul>
+    <ul>
+        <% if(messages.error) { %>
+            <li>
+                <div class="alert alert-success" role="alert">
+                <%= messages.error %>
+                </div>
+            </li>
+            <% } %>
+    </ul>
     <div class="row m-3 p-3">
         <div class="col-md-6">
             <form action="/login" method="POST">
@@ -25,7 +30,7 @@
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" name="password">
                 </div>
-                <button type="submit" class="btn btn-primary" value="login">Submit</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
             <div class="hstack gap-3">
                 <div class="ms-auto">Belum punya akun?</div>

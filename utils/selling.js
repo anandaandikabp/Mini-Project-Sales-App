@@ -48,7 +48,7 @@ const cartProduct = async (req, res) => {
 
     if (!product) {
         console.log((`${part_id} tidak ditemukan`));
-        msg3: req.flash('msg'),
+        req.flash('msg'),
             req.flash('msg2', 'Data tidak ditemukan!')
         res.redirect('/product')
         return false;
@@ -88,8 +88,7 @@ const buyProduct = async (req, res) => {
     console.log(newStock);
 
     const lastId = await pool.query(`
-SELECT MAX(trans_id) AS id FROM public.invoice
-`)
+    SELECT MAX(trans_id) AS id FROM public.invoice`)
 
     let link
     if (lastId.rows[0].id == null) {
@@ -98,19 +97,19 @@ SELECT MAX(trans_id) AS id FROM public.invoice
         link = parseInt(lastId.rows[0].id) + 1
     }
 
-
     await pool.query(`INSERT INTO invoice(
-    part_id, total, stock)
+    part_id, total, quantity)
     VALUES ( '${JSON.stringify(product)}','${total}','${JSON.stringify(newStock)}');`)
     req.flash('msg', 'Product berhasil dibeli!')
 
     res.redirect(`/sales/invoice/${link}`)
 }
 
+// invoice
 const invoice =
     async (req, res) => {
         const db = await pool.query(
-            `SELECT trans_id, date_trans, part_id, total
+            `SELECT trans_id, date_trans, part_id, total, quantity
 	FROM public.invoice;`
         )
         const result = db.rows.find(e => e.trans_id == req.params.id)
