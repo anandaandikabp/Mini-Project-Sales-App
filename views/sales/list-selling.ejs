@@ -43,12 +43,12 @@
                                                             </td>
                                                             <td>
                                                                 <ul>
-                                                                    <% detail.forEach((e,i=0)=> { %>
-                                                                        <li>id = <%= e.part_id %>
+                                                                    <% detail.forEach((barang,i=0)=> { %>
+                                                                        <li>id = <%= barang.part_id %>
 
-                                                                                brand = <%= e.brand %>
+                                                                                brand = <%= barang.brand %>
 
-                                                                                    part = <%= e.part_for %>
+                                                                                    part = <%= barang.part_for %>
 
                                                                                         quantity = <%= quantity[i] %>
                                                                         </li>
@@ -58,10 +58,6 @@
                                                             <td>
                                                                 Rp. <%= rp.format(product.total) %>
                                                             </td>
-                                                            <!-- <td>
-                                        <a class="btn btn-primary badge" href="/product/detail-product/<%# product.trans_id %> "
-                                            role="button">Detail</a>
-                                    </td> -->
                                                         </tr>
                                                         <% }) %>
                                                             <% } else { %>

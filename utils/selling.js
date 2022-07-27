@@ -40,23 +40,22 @@ const cartProduct = async (req, res) => {
     let product = []
     let quantity = []
     if (Array.isArray(req.body.part_id)) {
-        req.body.part_id.forEach((e,i=0) => {
-            product.push(query.find(d => d.part_id == e));
+        req.body.part_id.forEach((barang,i=0) => {
+            product.push(query.find(barang2 => barang2.part_id == barang));
             quantity.push(req.body.stock[i])
             i++
         });
 
     } else {
-        product.push(query.find(e => e.part_id == req.body.part_id));
+        product.push(query.find(barang => barang.part_id == req.body.part_id));
         quantity.push(req.body.stock)
     }
     console.log('/', product);
 
     if (!product) {
         console.log((`${part_id} tidak ditemukan`));
-        req.flash('msg'),
-            req.flash('msg2', 'Data tidak ditemukan!')
-        res.redirect('/product')
+        req.flash('msg2', 'Data tidak ditemukan!')
+        res.redirect('sales/list-product')
         return false;
     } else {
         console.log(product.part_id);
@@ -88,9 +87,9 @@ const buyProduct = async (req, res) => {
     let total = 0
     const query = (await pool.query('SELECT * FROM part')).rows
     if (Array.isArray(id)) {
-        id.forEach((e, i = 0) => {
-            total += parseInt(query.find(invoice => invoice.part_id == e).price) * parseInt(stock[i])
-            product.push(query.find(invoice => invoice.part_id == e))
+        id.forEach((barang, i = 0) => {
+            total += parseInt(query.find(invoice => invoice.part_id == barang).price) * parseInt(stock[i])
+            product.push(query.find(invoice => invoice.part_id == barang))
             newStock.push(stock[i])
             i++
         });
@@ -127,7 +126,7 @@ const invoice =
             `SELECT trans_id, date_trans, part_id, total, quantity
 	FROM public.invoice;`
         )
-        const result = db.rows.find(e => e.trans_id == req.params.id)
+        const result = db.rows.find(barang => barang.trans_id == req.params.id)
         const product = JSON.parse(result.part_id)
         const quantity = JSON.parse(result.quantity)
 

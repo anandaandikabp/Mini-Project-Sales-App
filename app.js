@@ -150,6 +150,7 @@ app.get('/product/add-product', (req, res) => {
     res.render('product/add-product', {
         title: 'Laman Tambah Product',
         layout: 'layout/main-layout',
+        role: req.user.role
     });
 })
 
@@ -157,13 +158,13 @@ app.get('/product/add-product', (req, res) => {
 app.get('/product/detail-product/:part_id', checkNotAuthenticated, detailProduct);
 
 // proses input data dengan validator produk
-app.post('/product', upload.array('image', 1), addProduct)
+app.post('/product', upload.array('image', 1), adminRole, addProduct)
 
 // get data produk yg mau diedit
 app.get('/product/edit/:part_id', checkNotAuthenticated, editProduct);
 
 // proses edit produk
-app.post('/product/update', updateProduct);
+app.post('/product/update', adminRole, updateProduct);
 
 // hapus produk
 app.get('/product/delete/:part_id', checkNotAuthenticated, hapusProduct);

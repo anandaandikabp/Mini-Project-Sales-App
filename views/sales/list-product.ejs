@@ -45,7 +45,7 @@
 
                                                     <input class="form-check-input" type="checkbox" name="part_id"
                                                         id="part_id" value="<%= product.part_id %>"
-                                                        onclick="document.getElementById('stock<%= product.part_id %>').removeAttribute('disabled')"><span>
+                                                        onclick="document.getElementById('stock<%= product.part_id %>').removeAttribute('disabled')" required><span>
                                                         Pilih?</span>
                                                     <input type="number" class="form-control"
                                                         id="stock<%= product.part_id %>" name="stock" required
