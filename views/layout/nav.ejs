@@ -11,10 +11,16 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-link text-light" href="/home">Home</a>
-        <a class="nav-link text-light" href="/customer/list-customer">Costumer</a>
-        <a class="nav-link text-light" href="/product/list-product">Product</a>
-        <a class="nav-link text-light" href="/sales/list-product">Buy Product</a>
-        <a class="nav-link text-light" href="/sales/list-selling">Selling List</a>
+        <% if (role==1) { %>
+          <a class="nav-link text-light" href="/customer/list-customer">Costumer</a>
+          <% } %>
+            <% if (role==2) { %>
+              <a class="nav-link text-light" href="/product/list-product">Product</a>
+              <a class="nav-link text-light" href="/sales/list-selling">Selling List</a>
+              <% } %>
+                <% if (role==3) { %>
+                  <a class="nav-link text-light" href="/sales/list-product">Buy Product</a>
+                  <% } %>
       </div>
     </div>
     <div class="navbar-nav">

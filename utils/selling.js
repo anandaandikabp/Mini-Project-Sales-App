@@ -13,6 +13,7 @@ const loadListProduct = async (req, res) => {
         product,
         msg: req.flash('msg'),
         msg2: req.flash('msg2'),
+        role: req.user.role
     });
     return product;
 };
@@ -27,6 +28,7 @@ const loadSelling = async (req, res) => {
         product,
         msg: req.flash('msg'),
         msg2: req.flash('msg2'),
+        role: req.user.role
     });
     return product;
 };
@@ -36,13 +38,17 @@ const cartProduct = async (req, res) => {
     console.log(req.body);
     const query = (await pool.query(`SELECT * FROM part`)).rows
     let product = []
+    let quantity = []
     if (Array.isArray(req.body.part_id)) {
-        req.body.part_id.forEach(e => {
+        req.body.part_id.forEach((e,i=0) => {
             product.push(query.find(d => d.part_id == e));
+            quantity.push(req.body.stock[i])
+            i++
         });
 
     } else {
         product.push(query.find(e => e.part_id == req.body.part_id));
+        quantity.push(req.body.stock)
     }
     console.log('/', product);
 
@@ -56,13 +62,15 @@ const cartProduct = async (req, res) => {
         console.log(product.part_id);
         console.log(product.brand);
         console.log(product.part_for);
-        console.log(product.price);
+        console.log(quantity);
         res.render('sales/cart-product', {
             title: 'Laman Cart',
             layout: 'layout/main-layout',
             product,
+            quantity,
             id: JSON.stringify(req.body.part_id),
-            stock: JSON.stringify(req.body.stock)
+            stock: JSON.stringify(req.body.stock),
+            role: req.user.role
         })
     }
     return product;
@@ -79,12 +87,19 @@ const buyProduct = async (req, res) => {
     let newStock = []
     let total = 0
     const query = (await pool.query('SELECT * FROM part')).rows
-    id.forEach((e, i = 0) => {
-        total += parseInt(query.find(invoice => invoice.part_id == e).price) * parseInt(stock[i])
-        product.push(query.find(invoice => invoice.part_id == e))
-        newStock.push(stock[i])
-        i++
-    });
+    if (Array.isArray(id)) {
+        id.forEach((e, i = 0) => {
+            total += parseInt(query.find(invoice => invoice.part_id == e).price) * parseInt(stock[i])
+            product.push(query.find(invoice => invoice.part_id == e))
+            newStock.push(stock[i])
+            i++
+        });
+    } else {
+        total += parseInt(query.find(invoice => invoice.part_id == id).price) * parseInt(stock)
+        product.push(query.find(invoice => invoice.part_id == id))
+        newStock.push(stock)
+    }
+   
     console.log(newStock);
 
     const lastId = await pool.query(`
@@ -114,12 +129,16 @@ const invoice =
         )
         const result = db.rows.find(e => e.trans_id == req.params.id)
         const product = JSON.parse(result.part_id)
+        const quantity = JSON.parse(result.quantity)
+
 
         res.render('sales/invoice', {
             title: 'Laman Product',
             layout: 'layout/main-layout',
             result,
-            product
+            product,
+            quantity,
+            role: req.user.role
         })
     }
 

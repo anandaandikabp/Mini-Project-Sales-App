@@ -31,6 +31,14 @@
             <label for="mobile" class="form-label">Mobile</label>
             <input type="number" class="form-control" id="mobile" name="mobile" value="<%= customer.mobile %>" required />
           </div>
+          <div class="mb-3">
+            <label for="role" class="form-label">Role</label>
+            <select class="form-select" id="role" name="role" aria-label="role" value="<%= customer.role %>" required>
+              <option value="1">Super Admin</option>
+              <option value="2">Admin</option>
+              <option value="3">User</option>
+            </select>
+          </div>
           <button type="submit" class="btn btn-success">Simpan</button>
           <a class="btn btn-primary" href="/customer/list-customer" role="button">Kembali</a>
         </form>

@@ -16,7 +16,7 @@
     </div>
 </div>
 <div class="row p-3">
-    <% product.forEach(product=> { %>
+    <% product.forEach((product, i=0)=> { %>
     <div class="col-md-4">
         
             <div class="card" style="width: 18rem;">
@@ -38,11 +38,11 @@
                         <h5>Part ID :</h5> <%= product.part_id %>
                     </li>
                     <li class="list-group-item">
-                        <h5>Quantity :</h5> <%= result.quantity %>
+                        <h5>Quantity :</h5> <%= quantity[i] %>
                     </li>
                 </ul>
             </div>
         
     </div>
-    <% }) %>
+    <% i++ }) %>
 </div>

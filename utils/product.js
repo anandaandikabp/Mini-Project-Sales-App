@@ -13,6 +13,7 @@ const loadProduct = async (req, res) => {
         product,
         msg: req.flash('msg'),
         msg2: req.flash('msg2'),
+        role: req.user.role
     });
     return product;
 };
@@ -37,6 +38,7 @@ const detailProduct = async (req, res) => {
             title: 'Laman Detail',
             layout: 'layout/main-layout',
             product,
+            role: req.user.role
         })    
     }
     return product;
@@ -51,6 +53,7 @@ const addProduct = async (req, res) => {
             title: 'Laman Tambah Product',
             layout: 'layout/main-layout',
             errors: errors.array(),
+            role: req.user.role
         })
     } else {
         const { brand, part_for, price, stock } = req.body 
@@ -72,6 +75,7 @@ const editProduct = async (req, res) => {
         title: 'Laman Edit product',
         layout: 'layout/main-layout',
         product,
+        role: req.user.role
     });
 }
 
@@ -85,7 +89,8 @@ const updateProduct = async (req, res) => {
             title: 'Edit Product',
             layout: 'layout/main-layout',
             errors: errors.array(),
-            product: req.body
+            product: req.body,
+            role: req.user.role
         })
     } else {
         console.log(req.body);

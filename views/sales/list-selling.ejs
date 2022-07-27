@@ -1,4 +1,4 @@
-<% let rp = Intl.NumberFormat('id-ID') %> 
+<% let rp=Intl.NumberFormat('id-ID') %>
     <div class="row">
         <div class="col">
             <div class="jumbotron">
@@ -6,56 +6,69 @@
                 <hr class="my-4">
             </div>
             <div class="col">
-                <% if (msg.length !== 0) { %>
+                <% if (msg.length !==0) { %>
                     <div class="alert alert-success" role="alert">
-                        <%= msg %> 
-                      </div>
-                <% } %>
-                <% if (msg2.length !== 0) { %>
-                    <div class="alert alert-danger" role="alert">
-                        <%= msg2 %> 
-                      </div>
-                <% } %>               
-                
-                <br>                
-                <h2>List Penjualan</h2>
-                <!-- menampilkan data dari app -->
-                <table class="table table-hover table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th scope="col">Transaksi Id</th>
-                            <th scope="col">Tanggal Transaksi</th>
-                            <th scope="col">Detail Transaksi</th>
-                            <th scope="col">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% if (product.length>= 1) { %>
-                            <% product.forEach((product, i)=> { i++ %>
-                                <tr>
-                                    <th scope="row">
-                                        <%= product.trans_id %>
-                                    </th>
-                                    <td>
-                                        <%= product.date_trans %>
-                                    </td>
-                                    <td>
-                                        <%= product.part_id %>
-                                    </td>
-                                    <td>
-                                        Rp. <%= rp.format(product.total) %>
-                                    </td>
-                                    <!-- <td>
+                        <%= msg %>
+                    </div>
+                    <% } %>
+                        <% if (msg2.length !==0) { %>
+                            <div class="alert alert-danger" role="alert">
+                                <%= msg2 %>
+                            </div>
+                            <% } %>
+
+                                <br>
+                                <h2>List Penjualan</h2>
+                                <!-- menampilkan data dari app -->
+                                <table class="table table-hover table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th scope="col">Transaksi Id</th>
+                                            <th scope="col">Tanggal Transaksi</th>
+                                            <th scope="col">Detail Transaksi</th>
+                                            <th scope="col">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (product.length>= 1) { %>
+                                            <% product.forEach((product, i)=> { i++ %>
+                                                <% detail=JSON.parse(product.part_id) %>
+                                                    <% quantity=JSON.parse(product.quantity) %>
+                                                        <tr>
+                                                            <th scope="row">
+                                                                <%= product.trans_id %>
+                                                            </th>
+                                                            <td>
+                                                                <%= product.date_trans %>
+                                                            </td>
+                                                            <td>
+                                                                <ul>
+                                                                    <% detail.forEach((e,i=0)=> { %>
+                                                                        <li>id = <%= e.part_id %>
+
+                                                                                brand = <%= e.brand %>
+
+                                                                                    part = <%= e.part_for %>
+
+                                                                                        quantity = <%= quantity[i] %>
+                                                                        </li>
+                                                                        <%i++ }) %>
+                                                                </ul>
+                                                            </td>
+                                                            <td>
+                                                                Rp. <%= rp.format(product.total) %>
+                                                            </td>
+                                                            <!-- <td>
                                         <a class="btn btn-primary badge" href="/product/detail-product/<%# product.trans_id %> "
                                             role="button">Detail</a>
                                     </td> -->
-                                </tr>
-                                <% }) %>
-                                    <% } else { %>
-                                        <p>data tidak ditemukan</p>
-                                        <% } %>
-                    </tbody>
-                </table>
+                                                        </tr>
+                                                        <% }) %>
+                                                            <% } else { %>
+                                                                <p>data tidak ditemukan</p>
+                                                                <% } %>
+                                    </tbody>
+                                </table>
             </div>
         </div>
     </div>

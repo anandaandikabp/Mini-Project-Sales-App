@@ -14,6 +14,7 @@ const loadCustomer = async (req, res) => {
         customer,
         msg: req.flash('msg'),
         msg2: req.flash('msg2'),
+        role: req.user.role
     });
     return customer;
 };
@@ -34,6 +35,7 @@ const detailCustomer = async (req, res) => {
             title: 'Laman Detail',
             layout: 'layout/main-layout',
             customer,
+            role: req.user.role
         })
     }
     return customer;
@@ -49,6 +51,7 @@ const addCustomer = async (req, res) => {
             layout: 'layout/main-layout',
             errors: errors.array(),
             customer: req.body,
+            role: req.user.role
         })
     } else {
         const { email, name, address, mobile, password, role } = req.body
@@ -79,22 +82,24 @@ const editCustomer = async (req, res) => {
         title: 'Laman Edit customer',
         layout: 'layout/main-layout',
         customer,
+        role: req.user.role
     });
 }
 
 // update kontak yang dicari
 const updateCustomer = async (req, res) => {
     const errors = validationResult(req);
-    const { cus_id, email, name, address, mobile, password } = req.body
+    const { cus_id, email, name, address, mobile, password, role } = req.body
     if (!errors.isEmpty()) {
         res.render('customer/edit-customer', {
             title: 'Edit customer',
             layout: 'layout/main-layout',
             errors: errors.array(),
             customer: req.body,
+            role: req.user.role
         })
     } else {
-        await pool.query(`UPDATE customer SET email = '${email}', name = '${name}', address = '${address}', mobile = ${mobile}, password = '${password}' WHERE cus_id = ${cus_id}`)
+        await pool.query(`UPDATE customer SET email = '${email}', name = '${name}', address = '${address}', mobile = ${mobile}, password = '${password}', role = ${role} WHERE cus_id = ${cus_id}`)
         req.flash('msg', 'Data berhasil diupdate!')
         res.redirect('/customer/list-customer')
         console.log(errors)
@@ -116,4 +121,37 @@ const hapusCustomer = async (req, res) => {
 
 };
 
-module.exports = { loadCustomer, detailCustomer, addCustomer, hapusCustomer, editCustomer, updateCustomer };
+// tambah data costumer by admin
+const addCustomerAdmin = async (req, res) => {
+    const errors = validationResult(req);
+    console.log(errors);
+    if (!errors.isEmpty()) {
+        res.render('register-admin', {
+            title: 'Laman Registrasi Customer',
+            layout: 'layout/main-layout',
+            errors: errors.array(),
+            customer: req.body,
+            role: req.user.role
+        })
+    } else {
+        const { email, name, address, mobile, password, role } = req.body
+        const hashedPassword = await bcrypt.hash(password, 10);
+        console.log({
+                    email,
+                    name,
+                    address,
+                    mobile,
+                    password,
+                    role
+                });
+        console.log(hashedPassword);
+        await pool.query(`INSERT INTO customer(
+    email, name, address, mobile, password, role)
+    VALUES ( '${email}', '${name}', '${address}', ${mobile}, '${hashedPassword}', '${role}');`)
+        req.flash('msg_success', 'Data berhasil ditambahkan!')
+        res.redirect('/customer/list-customer')
+        console.log(errors)
+    }
+}
+
+module.exports = { loadCustomer, detailCustomer, addCustomer, hapusCustomer, editCustomer, updateCustomer, addCustomerAdmin };

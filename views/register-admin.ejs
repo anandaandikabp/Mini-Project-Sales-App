@@ -11,7 +11,7 @@
         </ul>
       </div>
       <% } %>
-        <form action="/register" method="post">
+        <form action="/register-admin" method="post">
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input type="text" class="form-control" id="email" name="email" required />
@@ -31,7 +31,14 @@
           <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password" name="password" required />
-            <input type="hidden" class="form-control" id="role" name="role" value="3" required />
+          </div>
+          <div class="mb-3">
+            <label for="role" class="form-label">Role</label>
+            <select class="form-select" id="role" name="role" aria-label="role" required>
+              <option value="1">Super Admin</option>
+              <option value="2">Admin</option>
+              <option value="3">User</option>
+            </select>
           </div>
           <button type="submit" class="btn btn-success">Register</button>
           <a class="btn btn-primary" href="/" role="button">Kembali</a>

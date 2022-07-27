@@ -5,6 +5,8 @@
                 <h1 class="display-4">Halaman List Customer</h1>
                 <hr class="my-4">
             </div>
+            <a class="btn btn-success btn-lg float-end" href="/register-admin"
+                role="button"><i class="bi bi-file-earmark-plus-fill"></i> Registrasi User</a>
             <div class="col">
                 <% if (msg.length !== 0) { %>
                     <div class="alert alert-success" role="alert">
@@ -27,6 +29,7 @@
                             <th scope="col">Name</th>
                             <th scope="col">Address</th>
                             <th scope="col">Mobile Phone</th>
+                            <th scope="col">Role</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
@@ -45,6 +48,9 @@
                                     </td>
                                     <td>
                                         <%= customer.mobile %>
+                                    </td>
+                                    <td>
+                                        <%= customer.role %>
                                     </td>
                                     <td>
                                         <a class="btn btn-primary badge" href="/customer/detail-customer/<%= customer.cus_id %> "

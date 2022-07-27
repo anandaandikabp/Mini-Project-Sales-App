@@ -9,14 +9,14 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
 const session = require('express-session');
-const multer = require('multer');3
+const multer = require('multer'); 3
 const passport = require('passport');
 const initializePassport = require("./utils/passportConfig");
 
 initializePassport(passport);
 
 const { loadProduct, detailProduct, hapusProduct, addProduct, editProduct, updateProduct } = require('./utils/product');
-const { loadCustomer, detailCustomer, addCustomer, hapusCustomer, editCustomer, updateCustomer } = require('./utils/customer');
+const { loadCustomer, detailCustomer, addCustomer, hapusCustomer, editCustomer, updateCustomer, addCustomerAdmin } = require('./utils/customer');
 const { loadListProduct, cartProduct, buyProduct, invoice, loadSelling } = require('./utils/selling');
 const { resourceLimits } = require('worker_threads');
 
@@ -56,8 +56,8 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 
 // 3rd party middleware
-const log = fs.createWriteStream(path.join(__dirname, 'app.log'), {flags : 'a'})
-app.use(morgan('combined', {stream : log}));
+const log = fs.createWriteStream(path.join(__dirname, 'app.log'), { flags: 'a' })
+app.use(morgan('combined', { stream: log }));
 
 app.use(cookieParser('secret'))
 app.use(flash());
@@ -105,6 +105,7 @@ app.get('/home', checkNotAuthenticated, (req, res) => {
         {
             title: 'Sales App Auto Car',
             layout: 'layout/main-layout',
+            role: req.user.role
         });
 });
 
@@ -122,10 +123,27 @@ app.post('/register', [
     check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
 ], addCustomer);
 
+//                                                      ADMIN
+// get register by admin
+app.get('/register-admin', (req, res) => {
+    res.render('register-admin', {
+        title: 'Laman register',
+        layout: 'layout/login-layout',
+    });
+});
+
+// register by admin
+app.post('/register-admin', [
+    check('email', 'Email tidak valid').isEmail(),
+    check('mobile', 'Nomor tidak valid').isMobilePhone('id-ID')
+], addCustomerAdmin);
+
+//                                                      AKHIR ADMIN
+
 //                                                      PRODUK
 
 // list semua produk
-app.get('/product/list-product', checkNotAuthenticated, loadProduct);
+app.get('/product/list-product', checkNotAuthenticated, adminRole, loadProduct);
 
 // tambah data produk
 app.get('/product/add-product', (req, res) => {
@@ -155,7 +173,7 @@ app.get('/product/delete/:part_id', checkNotAuthenticated, hapusProduct);
 //                                                      CUSTOMER
 
 // list semua customer
-app.get('/customer/list-customer', checkNotAuthenticated, loadCustomer);
+app.get('/customer/list-customer', checkNotAuthenticated, superAdminRole, loadCustomer);
 
 // detail customer
 app.get('/customer/detail-customer/:cus_id', checkNotAuthenticated, detailCustomer);
@@ -177,10 +195,10 @@ app.get('/customer/delete/:cus_id', hapusCustomer);
 //                                                      SELLING
 
 // list semua product
-app.get('/sales/list-product', checkNotAuthenticated, loadListProduct);
+app.get('/sales/list-product', checkNotAuthenticated, userRole, loadListProduct);
 
 // list semua penjualan
-app.get('/sales/list-selling', checkNotAuthenticated, loadSelling);
+app.get('/sales/list-selling', checkNotAuthenticated, adminRole, loadSelling);
 
 // detail produk sales
 app.post('/sales/cart-product', checkNotAuthenticated, cartProduct);
@@ -193,10 +211,6 @@ app.get('/sales/invoice/:id', checkNotAuthenticated, invoice);
 
 // //                                                      AKHIR SELLING
 
-app.use('/', (req, res) => {
-    res.status(404)
-    res.send('Not Found 404')
-});
 
 function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
@@ -206,12 +220,46 @@ function checkAuthenticated(req, res, next) {
 }
 
 function checkNotAuthenticated(req, res, next) {
-    console.log(req.isAuthenticated());
     if (req.isAuthenticated()) {
         return next();
     }
     return res.redirect('/');
 }
+
+// cek role super admin
+function superAdminRole(req, res, next) {
+    if (req.user !== undefined) {
+        if (req.user.role == 1) {
+            return next()
+        }
+    }
+    return res.redirect('/');
+}
+
+// cek role admin
+function adminRole(req, res, next) {
+    if (req.user !== undefined) {
+        if (req.user.role == 2) {
+            return next()
+        }
+    }
+    return res.redirect('/');
+}
+
+// cek role user biasa
+function userRole(req, res, next) {
+    if (req.user !== undefined) {
+        if (req.user.role == 3) {
+            return next()
+        }
+    }
+    return res.redirect('/');
+}
+
+app.use('/', (req, res) => {
+    res.status(404)
+    res.send('Not Found 404')
+});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
